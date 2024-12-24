@@ -1,4 +1,4 @@
-import LoginMenu from "../components/LoginMenu"
+import LoginMenu from "../components/LoginRegister/LoginMenu"
 
 const Login = () => {
   return (

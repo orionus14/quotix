@@ -1,4 +1,4 @@
-import RegisterMenu from '../components/RegisterMenu'
+import RegisterMenu from '../components/LoginRegister/RegisterMenu'
 
 const Register = () => {
   return (

@@ -1,18 +1,32 @@
 import axios from 'axios';
+import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginMenu = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const navigate = useNavigate();
 
     const login = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        await axios.post('/login', { email, password });
+        try {
+            await axios.post('/login', { email, password }, { withCredentials: true });
+            navigate('/');
+        } catch (error) {
+            console.error("Login failed", error);
+        }
     }
-    
+
     return (
         <div className='h-screen flex flex-col items-center justify-center'>
+            <Link
+                to='/'
+                className="flex items-center absolute top-10 left-10 p-2 rounded-lg text-gray-600 hover:text-gray-400 transition duration-300 border border-gray-300"
+            >
+                <ArrowLeft />
+                <span className="ml-2">Back to Home</span>
+            </Link>
             <h1 className='mb-4 text-3xl'>Welcome back!</h1>
             <form className="w-72 mx-auto bg-cyan-50 pb-10 pt-8 px-8 rounded-lg" onSubmit={login}>
                 <h2 className='text-center mb-4 text-xl font-semibold'>Login</h2>
