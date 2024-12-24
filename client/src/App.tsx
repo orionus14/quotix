@@ -1,14 +1,21 @@
-import Register from "./components/Register"
 import axios from "axios"
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   axios.defaults.baseURL = 'http://localhost:4000';
   axios.defaults.withCredentials = true;
-  
+
   return (
-    <>
-      <Register />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   )
 }
 
