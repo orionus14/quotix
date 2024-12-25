@@ -6,7 +6,9 @@ interface IChatItem {
 
 const ChatItem: React.FC<IChatItem> = ({ username }) => {
     return (
-        <div className='border-b border-gray-300 flex justify-between items-center pl-3 pr-2 py-6'>
+        <div
+            className='border-b border-gray-300 flex justify-between items-center pl-3 pr-2 py-6 hover:bg-gray-100 cursor-pointer'
+        >
             <div className='flex items-center'>
                 <div className='w-10 h-10 bg-gray-300 rounded-full mr-2'></div>
                 <div>

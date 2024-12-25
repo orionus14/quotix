@@ -1,5 +1,4 @@
 import { SendHorizonal } from 'lucide-react'
-import React from 'react'
 
 const MessageInput = () => {
   return (

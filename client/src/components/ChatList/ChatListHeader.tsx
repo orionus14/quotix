@@ -39,7 +39,7 @@ const ChatListHeader = () => {
           }
         </div>
       </div>
-      <div className='relative'>
+      <div className='relative mt-2'>
         <Search
           className='absolute top-1/2 -translate-y-1/2 left-2'
           size={16}

@@ -4,6 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { connectToDatabase } from './config/database';
 import routes from './routes';
+import './types/express';
 
 dotenv.config();
 

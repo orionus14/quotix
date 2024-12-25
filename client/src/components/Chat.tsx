@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import ChatListHeader from "./ChatList/ChatListHeader"
 import ChatListSection from "./ChatList/ChatListSection"
 import MessageHeader from "./MessageSection/MessageHeader"
@@ -22,9 +22,11 @@ const Chat = () => {
     return (
         <AuthProvider>
             <div className="flex h-screen">
-                <div className="w-1/3">
+                <div className="w-1/3 h-full flex flex-col">
                     <ChatListHeader />
-                    <ChatListSection />
+                    <div className="flex-grow overflow-y-auto thin-scrollbar">
+                        <ChatListSection />
+                    </div>
                 </div>
                 <div className="w-2/3 border-l border-gray-300 flex flex-col">
                     <MessageHeader username='Alice Freeman' />

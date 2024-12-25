@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { jwtSecret } from '../config/config';
+import Chat from '../models/Chat';
 
 export const profileController = async (req: Request, res: Response) => {
     const token = req.cookies.token;
@@ -22,11 +23,14 @@ export const profileController = async (req: Request, res: Response) => {
             return;
         }
 
+        const chats = await Chat.find({ user: userId }).populate('messages');
+
         res.json({
             userId: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            chats: chats
         });
 
     } catch (err) {

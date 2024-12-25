@@ -1,11 +1,28 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import axios from 'axios';
 
+interface Message {
+    _id: string;
+    chatId: string;
+    text: string;
+    senderType: 'user' | 'api';
+    createdAt: string;
+}
+
+interface Chat {
+    _id: string;
+    user: string;
+    messages: Message[];
+    createdAt: string;
+    updatedAt: string;
+}
+
 interface User {
     id: string;
     firstName: string;
     lastName: string;
     email: string;
+    chats: Chat[];
 }
 
 interface AuthContextType {
@@ -13,6 +30,7 @@ interface AuthContextType {
     isAuthenticated: boolean;
     login: (userData: User) => void;
     logout: () => void;
+    getChats: () => Chat[];
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,7 +41,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     useEffect(() => {
         axios.get('/profile', { withCredentials: true })
-            .then((response) => setUser(response.data))
+            .then(response => {
+                const { userId, firstName, lastName, email, chats } = response.data;
+                setUser({
+                    id: userId,
+                    firstName,
+                    lastName,
+                    email,
+                    chats,
+                });
+            })
             .catch(() => setUser(null));
     }, []);
 
@@ -37,8 +64,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             .catch((err) => console.error('Logout error:', err));
     };
 
+    const getChats = () => {
+        return user?.chats || [];
+    };
+
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, getChats }}>
             {children}
         </AuthContext.Provider>
     );
