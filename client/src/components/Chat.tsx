@@ -5,32 +5,34 @@ import MessageHeader from "./MessageSection/MessageHeader"
 import MessageInput from "./MessageSection/MessageInput"
 import Messages from "./MessageSection/Messages"
 import axios from "axios"
+import { AuthProvider } from "../context/AuthContext"
 
 const Chat = () => {
-    const [firstName, setFirstName] = useState<string>('No Name');
 
     useEffect(() => {
         axios.get('/profile', { withCredentials: true })
-            .then(response => {
-                console.log(response)
-                setFirstName(response.data.firstName);
+            .then(() => {
+                console.log('User Logged In');
             })
             .catch(() => {
                 console.error("User is not logged in");
             })
     }, []);
+
     return (
-        <div className="flex h-screen">
-            <div className="w-1/3">
-                <ChatListHeader firstName={firstName} />
-                <ChatListSection />
+        <AuthProvider>
+            <div className="flex h-screen">
+                <div className="w-1/3">
+                    <ChatListHeader />
+                    <ChatListSection />
+                </div>
+                <div className="w-2/3 border-l border-gray-300 flex flex-col">
+                    <MessageHeader username='Alice Freeman' />
+                    <Messages />
+                    <MessageInput />
+                </div>
             </div>
-            <div className="w-2/3 border-l border-gray-300 flex flex-col">
-                <MessageHeader username='Alice Freeman' />
-                <Messages />
-                <MessageInput />
-            </div>
-        </div>
+        </AuthProvider>
     )
 }
 
