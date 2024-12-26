@@ -2,9 +2,12 @@ import { Plus } from 'lucide-react'
 import ChatItem from './ChatItem'
 import { useState } from 'react'
 import DialogBox from './DialogBox';
+import { useAuth } from '../../context/AuthContext';
 
 const ChatListSection = () => {
   const [isDialogBox, setIsDialogBox] = useState(false);
+  const { getChats } = useAuth();
+  const chats = getChats();
 
   const closeDialogBox = () => {
     setIsDialogBox(false);
@@ -23,7 +26,18 @@ const ChatListSection = () => {
         </button>
       </div>
       <div>
-        <ChatItem username='Alice Freeman' />
+        {chats.length > 0 ? (
+          chats.map((chat) => (
+            <ChatItem
+              key={chat._id}
+              firstName={chat.firstName}
+              lastName={chat.lastName}
+              chatId={chat._id}
+            />
+          ))
+        ) : (
+          <div className='pl-3 pr-2 text-gray-400 cursor-default'>No chats available</div>
+        )}
       </div>
 
       {isDialogBox && (

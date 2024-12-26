@@ -3,7 +3,7 @@ import Chat from '../models/Chat';
 import User from '../models/User';
 
 export const createChatController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const { firstName, lastName } = req.body;
+    const { userFirstName: firstName, userLastName: lastName } = req.body;
     const userId = req.userId;
 
     if (!firstName || !lastName) {
@@ -25,7 +25,7 @@ export const createChatController = async (req: Request, res: Response, next: Ne
         });
 
         await newChat.save();
-        res.status(201).json({ message: 'Chat created successfully' });
+        res.status(201).json({ newChat });
     } catch (error) {
         console.error('Error creating chat:', error);
         res.status(500).json({ message: 'Server error' });

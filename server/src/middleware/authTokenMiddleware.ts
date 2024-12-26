@@ -15,9 +15,11 @@ export const authTokenMiddleware = (req: Request, res: Response, next: NextFunct
         res.status(401).json({ message: 'No token provided' });
         
     }
+    
     try {
         const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
         req.userId = decoded.userId;
+        
         next();
     } catch (error) {
         res.status(403).json({ message: 'Invalid or expired token' });

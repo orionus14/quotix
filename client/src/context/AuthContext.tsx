@@ -10,6 +10,8 @@ interface Message {
 }
 
 interface Chat {
+    lastName: any;
+    firstName: any;
     _id: string;
     user: string;
     messages: Message[];
@@ -31,6 +33,9 @@ interface AuthContextType {
     login: (userData: User) => void;
     logout: () => void;
     getChats: () => Chat[];
+    addChat: (newChat: Chat) => void;
+    updateChat: (updatedChat: Chat) => void;
+    deleteChat: (chatId: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -68,8 +73,53 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return user?.chats || [];
     };
 
+    const addChat = (newChat: Chat) => {
+        setUser((prevUser) => {
+            if (!prevUser) return prevUser;
+            return { ...prevUser, chats: [...prevUser.chats, newChat] };
+        });
+    };
+
+    const updateChat = (updatedChat: Chat) => {
+        setUser((prevUser) => {
+            if (!prevUser) return prevUser;
+            const updatedChats = prevUser.chats.map(chat =>
+                chat._id === updatedChat._id ? updatedChat : chat
+            );
+            return { ...prevUser, chats: updatedChats };
+        });
+    };
+
+    const deleteChat = async (chatId: string) => {
+        try {
+            const response = await axios.delete(`/chat/${chatId}`, { withCredentials: true });
+            
+            if (response.status === 200) {
+                setUser((prevUser) => {
+                    if (!prevUser) return prevUser;
+                    return {
+                        ...prevUser,
+                        chats: prevUser.chats.filter((chat) => chat._id !== chatId),
+                    };
+                });
+                console.log("Chat deleted successfully");
+            }
+        } catch (error) {
+            console.error("Failed to delete chat", error);
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, logout, getChats }}>
+        <AuthContext.Provider value={{
+            user,
+            isAuthenticated,
+            login,
+            logout,
+            getChats,
+            addChat,
+            updateChat,
+            deleteChat
+        }}>
             {children}
         </AuthContext.Provider>
     );

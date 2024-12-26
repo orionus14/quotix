@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import { connectToDatabase } from './config/database';
 import routes from './routes';
 import './types/express';
+import './models/User';
+import './models/Chat';
+import './models/Message';
 
 dotenv.config();
 
