@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 
 function App() {
-  axios.defaults.baseURL = 'http://localhost:4000/api';
+  axios.defaults.baseURL = `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api`;
   axios.defaults.withCredentials = true;
 
   return (
