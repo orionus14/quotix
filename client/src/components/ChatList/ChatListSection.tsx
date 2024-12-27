@@ -11,7 +11,7 @@ interface IChatListSection {
 
 const ChatListSection: React.FC<IChatListSection> = ({ searchQuery, handleSelectChat }) => {
   const [isDialogBox, setIsDialogBox] = useState(false);
-  const { getChats } = useAuth();
+  const { getChats, isAuthenticated } = useAuth();
   const chats = getChats();
 
   const closeDialogBox = () => {
@@ -27,13 +27,15 @@ const ChatListSection: React.FC<IChatListSection> = ({ searchQuery, handleSelect
     <div className='w-full h-full border-r border-gray-300'>
       <div className='flex items-center justify-between pl-3 pr-2 py-6'>
         <h2 className='text-cyan-500'>Chats</h2>
-        <button
-          className='flex items-center text-sm text-cyan-500 hover:text-cyan-400 transition duration-300 border border-gray-300 font-semibold p-2 rounded-lg'
-          onClick={() => setIsDialogBox(true)}
-        >
-          <Plus size={16} />
-          <span className='ml-1'>New Chat</span>
-        </button>
+        {isAuthenticated && (
+          <button
+            className='flex items-center text-sm text-cyan-500 hover:text-cyan-400 transition duration-300 border border-gray-300 font-semibold p-2 rounded-lg'
+            onClick={() => setIsDialogBox(true)}
+          >
+            <Plus size={16} />
+            <span className='ml-1'>New Chat</span>
+          </button>
+        )}
       </div>
       <div>
         {filteredChats.length > 0 ? (

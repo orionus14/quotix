@@ -35,6 +35,7 @@ interface AuthContextType {
     login: (userData: User) => void;
     logout: () => void;
     getChats: () => Chat[];
+    getLastMessage: (chatId: string) => Message | null;
     addChat: (newChat: Chat) => void;
     updateChat: (updatedChat: Chat) => void;
     deleteChat: (chatId: string) => void;
@@ -57,7 +58,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                     lastName,
                     email,
                     chats,
-                });
+                }); 
             })
             .catch(() => setUser(null));
     }, []);
@@ -66,7 +67,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (!user) return;
     
         const handleNewMessage = (message: Message) => {
-            console.log('New message received:', message);
     
             setUser((prevUser) => {
                 if (!prevUser) return prevUser;
@@ -103,6 +103,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const getChats = () => {
         return user?.chats || [];
+    };
+
+    const getLastMessage = (chatId: string): Message | null => {
+        const chat = user?.chats.find((chat) => chat._id === chatId);
+        if (chat && chat.messages.length > 0) {
+            return chat.messages[chat.messages.length - 1];
+        }
+        return null;
     };
 
     const addChat = (newChat: Chat) => {
@@ -152,6 +160,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             login,
             logout,
             getChats,
+            getLastMessage,
             addChat,
             updateChat,
             deleteChat,

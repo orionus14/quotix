@@ -2,6 +2,8 @@ import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react'
 import DialogBox from './DialogBox';
 import Confirmation from './ConfirmationBox';
+import { useAuth } from '../../context/AuthContext';
+import { format } from 'date-fns';
 
 interface IChatItem {
     firstName: string;
@@ -12,6 +14,13 @@ interface IChatItem {
 const ChatItem: React.FC<IChatItem> = ({ firstName, lastName, chatId }) => {
     const [isDialogBox, setIsDialogBox] = useState(false);
     const [isConfirmationBox, setIsConfirmationBox] = useState(false);
+    const { getLastMessage } = useAuth();
+    const lastMessage = getLastMessage(chatId);
+
+    const date = lastMessage?.createdAt ? new Date(lastMessage.createdAt) : null;
+    let formattedDate = null;
+    if (date)
+        formattedDate = format(date, 'MMM dd, yyyy');
 
     const closeDialogBox = () => {
         setIsDialogBox(false);
@@ -29,7 +38,7 @@ const ChatItem: React.FC<IChatItem> = ({ firstName, lastName, chatId }) => {
                 <div className='w-10 h-10 bg-gray-300 rounded-full mr-2'></div>
                 <div>
                     <div>{`${firstName} ${lastName}`}</div>
-                    <div className='text-xs text-gray-400'>How was your meeting?</div>
+                    <div className='text-xs text-gray-400 w-28 truncate break-words'>{lastMessage?.text ? lastMessage.text : 'no messages yet'}</div>
                 </div>
             </div>
             <div className='text-gray-600 flex flex-col items-end justify-center'>
@@ -47,7 +56,7 @@ const ChatItem: React.FC<IChatItem> = ({ firstName, lastName, chatId }) => {
                         <Trash2 size={16} className='cursor-pointer text-gray-600 hover:text-gray-500' />
                     </div>
                 </div>
-                <div className='text-xs mt-2'>Aug 17, 2022</div>
+                <div className='text-xs mt-2'>{formattedDate ? formattedDate : ''}</div>
             </div>
 
             {isDialogBox && (

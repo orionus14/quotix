@@ -3,6 +3,7 @@ import ChatListSection from "./ChatList/ChatListSection"
 import MessageHeader from "./MessageSection/MessageHeader"
 import MessageInput from "./MessageSection/MessageInput"
 import Messages from "./MessageSection/Messages"
+import Notification from "./Notification"
 import { AuthProvider, Message } from "../context/AuthContext"
 import { useEffect, useState } from "react"
 import { Chat as ChatModel } from "../context/AuthContext"
@@ -13,6 +14,7 @@ const Chat = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [chat, setChat] = useState<null | ChatModel>(null);
     const [chatMessages, setChatMessages] = useState<Message[]>([]);
+    const [notifications, setNotifications] = useState<string[]>([]);
 
     useEffect(() => {
         if (chat) {
@@ -40,11 +42,20 @@ const Chat = () => {
         setChatMessages(messages);
     };
 
+    useEffect(() => {
+        socket.on("notification", (notification) => {
+            setNotifications((prevNotifications) => [...prevNotifications, notification.message]);
+        });
+
+        return () => {
+            socket.off("notification");
+        };
+    }, []);
 
     return (
         <AuthProvider>
             <div className="flex h-screen bg-[#FBF8F9]">
-                <div className="w-1/3 h-full flex flex-col">
+                <div className="w-1/2 lg:w-1/3 h-full flex flex-col">
                     <ChatListHeader setSearchQuery={setSearchQuery} />
                     <div className="flex-grow overflow-y-auto thin-scrollbar">
                         <ChatListSection
@@ -54,13 +65,17 @@ const Chat = () => {
                     </div>
                 </div>
                 {chat && (
-                    <div className="w-2/3 border-l border-gray-300 flex flex-col">
+                    <div className="w-1/2 lg:w-2/3 border-l border-gray-300 flex flex-col">
                         <MessageHeader chatId={chat._id} />
                         <Messages chatId={chat._id} chatMessages={chatMessages} setChatMessages={setChatMessages} />
                         <MessageInput chatId={chat._id} />
                     </div>
                 )}
             </div>
+
+            {notifications.map((message, index) => (
+                <Notification key={index} message={message} />
+            ))}
         </AuthProvider>
     )
 }

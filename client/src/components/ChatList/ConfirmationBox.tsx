@@ -22,7 +22,7 @@ const ConfirmationBox: React.FC<IConfirmationBox> = ({ closeConfirmationBox, cha
                 >
                     <X />
                 </div>
-                <div className='text-center mb-4 text-xl'>Do you really want to delete chat with <span className='font-semibold'>{`${firstName} ${lastName}`}</span></div>
+                <div className='text-center mb-4 text-xl'>Do you really want to delete chat with <span className='font-semibold'>{`${firstName} ${lastName}`}</span> and all the messages?</div>
                 <div className='flex justify-center'>
                     <button
                         className='block bg-cyan-500 text-white py-2 px-3 hover:bg-cyan-400 transition duration-300 font-medium rounded-sm mx-1'

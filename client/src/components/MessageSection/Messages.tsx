@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import socket from "../../utils/socket";
 import { Message } from "../../context/AuthContext";
 import { MoveDown } from "lucide-react";
+import { format } from "date-fns";
 
 interface IMessages {
   chatId: string;
@@ -34,9 +35,13 @@ const Messages: React.FC<IMessages> = ({ chatId, chatMessages, setChatMessages }
     }
   };
 
+  const formatDate = (date: string) => {
+    if (date)
+      return format(new Date(date), 'M/dd/yyyy, h:mm a');
+  }
+
   useEffect(() => {
     const handleNewMessage = (newMessage: Message) => {
-      console.log("Received message:", newMessage);
       if (newMessage.chatId === chatId) {
         setChatMessages((prevMessages) => {
           if (prevMessages.some((msg) => msg._id === newMessage._id)) {
@@ -65,20 +70,25 @@ const Messages: React.FC<IMessages> = ({ chatId, chatMessages, setChatMessages }
 
   return (
     <div
-      className="flex-grow overflow-y-auto thin-scrollbar"
+      className="flex-grow overflow-y-auto thin-scrollbar relative p-8"
       ref={messagesContainerRef}
       onScroll={handleScroll}
     >
       {chatMessages.map((msg) => (
-        <div key={msg._id} className="p-2">
-          <span className="font-bold">{msg.senderType === "user" ? "You" : msg.author}:</span>
-          <p>{msg.text}</p>
+        <div key={msg._id} className={`my-2 ${msg.senderType === "user" ? 'pl-12' : 'pr-12'}`}>
+          <span className={`font-bold  ${msg.senderType === "user" ? 'hidden' : 'block'}`}>{msg.author}</span>
+          <div className={`${msg.senderType === "user" ? 'text-right' : 'text-left'}`}>
+            <p className={`inline-block break-all p-2 rounded-md mt-1 ${msg.senderType === "user" ? 'bg-gray-200' : 'bg-[#3F4352] text-[#efefef]'}`}>
+              {msg.text}
+            </p>
+            <p className="text-gray-500 cursor-default text-xs mt-1">{formatDate(msg.createdAt)}</p>
+          </div>
         </div>
       ))}
       <div ref={messagesEndRef} />
       <button
         onClick={scrollToBottomSmoothly}
-        className={`fixed bottom-16 right-4 p-2 bg-gray-500 text-white rounded-full shadow-lg transition-opacity duration-300 ${showScrollToBottomButton ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed bottom-20 right-4 p-2 bg-gray-500 text-white rounded-full shadow-lg transition-opacity duration-300 ${showScrollToBottomButton ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       >
         <MoveDown size={16} />
       </button>
