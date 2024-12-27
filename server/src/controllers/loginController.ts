@@ -22,9 +22,9 @@ export const loginController = async (req: Request, res: Response) => {
                 }).json({ id: foundUser._id });
             });
         } else {
-            res.status(401).json('Incorrect password');
+            res.status(401).json({message: 'Incorrect password'});
         }
     } else {
-        res.status(403).json('User not found');
+        res.status(403).json({message: 'User not found'});
     }
 };

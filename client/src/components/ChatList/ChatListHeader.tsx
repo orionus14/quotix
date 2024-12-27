@@ -17,7 +17,7 @@ const ChatListHeader: React.FC<IChatListHeader> = ({ setSearchQuery }) => {
     <div className='h-32 bg-[#FBF8F9] border-b border-r border-gray-300 p-3 flex flex-col justify-between'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center'>
-          <div className='w-10 h-10 bg-white rounded-full mr-2'></div>
+          <div className='w-10 h-10 bg-gray-300 rounded-full mr-2'></div>
           <div>
             {isAuthenticated ? (
               <span>{user?.firstName} {user?.lastName}</span>

@@ -65,7 +65,7 @@ const Messages: React.FC<IMessages> = ({ chatId, chatMessages, setChatMessages }
   }, [chatMessages]);
 
   if (!chatMessages || chatMessages.length === 0) {
-    return <div className="text-gray-500 p-4">No messages yet.</div>;
+    return <div className="flex-grow text-gray-500 p-4">No messages yet.</div>;
   }
 
   return (

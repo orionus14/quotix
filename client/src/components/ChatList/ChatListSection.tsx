@@ -11,7 +11,7 @@ interface IChatListSection {
 
 const ChatListSection: React.FC<IChatListSection> = ({ searchQuery, handleSelectChat }) => {
   const [isDialogBox, setIsDialogBox] = useState(false);
-  const { getChats, isAuthenticated } = useAuth();
+  const { getChats, isAuthenticated, getLastMessage } = useAuth();
   const chats = getChats();
 
   const closeDialogBox = () => {
@@ -21,6 +21,15 @@ const ChatListSection: React.FC<IChatListSection> = ({ searchQuery, handleSelect
   const filteredChats = chats.filter((chat) => {
     const fullName = `${chat.firstName} ${chat.lastName}`.toLowerCase();
     return fullName.includes(searchQuery.toLowerCase());
+  })
+  .sort((a, b) => {
+    const lastMessageA = getLastMessage(a._id);
+    const lastMessageB = getLastMessage(b._id);
+
+    const dateA = lastMessageA ? new Date(lastMessageA.createdAt).getTime() : new Date(a.createdAt).getTime();
+    const dateB = lastMessageB ? new Date(lastMessageB.createdAt).getTime() : new Date(b.createdAt).getTime();
+
+    return dateB - dateA;
   });
 
   return (
@@ -54,6 +63,11 @@ const ChatListSection: React.FC<IChatListSection> = ({ searchQuery, handleSelect
           <div className="pl-3 pr-2 text-gray-400 cursor-default">No chats available</div>
         )}
       </div>
+      {!isAuthenticated && (
+        <div className="pl-3 pr-2 text-gray-400 cursor-default">
+          Please, log in to get the chats. It takes only 30 seconds :)
+        </div>
+      )}
       {isDialogBox && (
         <DialogBox
           closeDialogBox={closeDialogBox}

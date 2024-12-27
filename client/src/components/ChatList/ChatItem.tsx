@@ -38,7 +38,7 @@ const ChatItem: React.FC<IChatItem> = ({ firstName, lastName, chatId }) => {
                 <div className='w-10 h-10 bg-gray-300 rounded-full mr-2'></div>
                 <div>
                     <div>{`${firstName} ${lastName}`}</div>
-                    <div className='text-xs text-gray-400 w-28 truncate break-words'>{lastMessage?.text ? lastMessage.text : 'no messages yet'}</div>
+                    <div className='text-xs text-gray-400 w-28 truncate break-words'>{lastMessage?.text}</div>
                 </div>
             </div>
             <div className='text-gray-600 flex flex-col items-end justify-center'>
