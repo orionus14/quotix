@@ -1,14 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { Chat, useAuth } from '../../context/AuthContext';
 
 interface IMessageHeader {
-    username: string;
+    chatId: string;
 }
 
-const MessageHeader: React.FC<IMessageHeader> = ({ username }) => {
+const MessageHeader: React.FC<IMessageHeader> = ({ chatId }) => {
+    const { user } = useAuth();
+    const [chat, setChat] = useState<null | Chat>(null);
+
+    useEffect(() => {
+        if (user) {
+            const foundChat = user.chats.find((chat) => chat._id === chatId);
+            setChat(foundChat || null);
+        }
+    }, [user, chatId]);
+
+    if (!chat) {
+        return null;
+    }
     return (
         <div className='flex items-center h-20 border-b border-gray-300 pl-3 pr-2 py-3 bg-[#FBF8F9]'>
             <div className='w-10 h-10 bg-white rounded-full mr-2'></div>
-            <div className='font-medium'>{username}</div>
+            <div className='font-medium'>{chat.firstName} {chat.lastName}</div>
         </div>
     )
 }

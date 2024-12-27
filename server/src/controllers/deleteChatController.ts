@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import Chat from '../models/Chat';
+import Message from '../models/Message';
 
 export const deleteChatController = async (req: Request, res: Response, next: NextFunction) => {
     const { chatId } = req.params;
     try {
+        await Message.deleteMany({ chatId });
         const deletedChat = await Chat.findByIdAndDelete(chatId);
         if (!deletedChat) {
             res.status(404).json({ message: 'Chat not found' });

@@ -1,10 +1,15 @@
 import { Plus } from 'lucide-react'
 import ChatItem from './ChatItem'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import DialogBox from './DialogBox';
-import { useAuth } from '../../context/AuthContext';
+import { Chat, useAuth } from '../../context/AuthContext';
 
-const ChatListSection = () => {
+interface IChatListSection {
+  searchQuery: string;
+  handleSelectChat: (chat: Chat) => void;
+}
+
+const ChatListSection: React.FC<IChatListSection> = ({ searchQuery, handleSelectChat }) => {
   const [isDialogBox, setIsDialogBox] = useState(false);
   const { getChats } = useAuth();
   const chats = getChats();
@@ -13,8 +18,13 @@ const ChatListSection = () => {
     setIsDialogBox(false);
   };
 
+  const filteredChats = chats.filter((chat) => {
+    const fullName = `${chat.firstName} ${chat.lastName}`.toLowerCase();
+    return fullName.includes(searchQuery.toLowerCase());
+  });
+
   return (
-    <div className='w-full h-full'>
+    <div className='w-full h-full border-r border-gray-300'>
       <div className='flex items-center justify-between pl-3 pr-2 py-6'>
         <h2 className='text-cyan-500'>Chats</h2>
         <button
@@ -26,20 +36,22 @@ const ChatListSection = () => {
         </button>
       </div>
       <div>
-        {chats.length > 0 ? (
-          chats.map((chat) => (
-            <ChatItem
-              key={chat._id}
-              firstName={chat.firstName}
-              lastName={chat.lastName}
-              chatId={chat._id}
-            />
+        {filteredChats.length > 0 ? (
+          filteredChats.map((chat) => (
+            <div key={chat._id}
+              onClick={() => handleSelectChat(chat)}
+            >
+              <ChatItem
+                firstName={chat.firstName}
+                lastName={chat.lastName}
+                chatId={chat._id}
+              />
+            </div>
           ))
         ) : (
-          <div className='pl-3 pr-2 text-gray-400 cursor-default'>No chats available</div>
+          <div className="pl-3 pr-2 text-gray-400 cursor-default">No chats available</div>
         )}
       </div>
-
       {isDialogBox && (
         <DialogBox
           closeDialogBox={closeDialogBox}

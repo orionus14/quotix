@@ -13,7 +13,6 @@ export const authTokenMiddleware = (req: Request, res: Response, next: NextFunct
     }
     if (!token) {
         res.status(401).json({ message: 'No token provided' });
-        
     }
     
     try {

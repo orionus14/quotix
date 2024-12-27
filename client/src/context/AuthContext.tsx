@@ -1,15 +1,17 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import axios from 'axios';
+import socket from '../utils/socket';
 
-interface Message {
+export interface Message {
     _id: string;
     chatId: string;
     text: string;
     senderType: 'user' | 'api';
     createdAt: string;
+    author?: string;
 }
 
-interface Chat {
+export interface Chat {
     lastName: any;
     firstName: any;
     _id: string;
@@ -36,6 +38,7 @@ interface AuthContextType {
     addChat: (newChat: Chat) => void;
     updateChat: (updatedChat: Chat) => void;
     deleteChat: (chatId: string) => void;
+    sendMessage: (chatId: string, text: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,6 +61,35 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             })
             .catch(() => setUser(null));
     }, []);
+
+    useEffect(() => {
+        if (!user) return;
+    
+        const handleNewMessage = (message: Message) => {
+            console.log('New message received:', message);
+    
+            setUser((prevUser) => {
+                if (!prevUser) return prevUser;
+    
+                const updatedChats = prevUser.chats.map((chat) =>
+                    chat._id === message.chatId
+                        ? {
+                              ...chat,
+                              messages: [...chat.messages.filter((msg) => msg._id !== message._id), message],
+                          }
+                        : chat
+                );
+                return { ...prevUser, chats: updatedChats };
+            });
+        };
+    
+        socket.on('new_message', handleNewMessage);
+    
+        return () => {
+            socket.off('new_message', handleNewMessage);
+        };
+    }, [user]);
+    
 
     const login = (userData: User) => {
         setUser(userData);
@@ -93,7 +125,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const deleteChat = async (chatId: string) => {
         try {
             const response = await axios.delete(`/chat/${chatId}`, { withCredentials: true });
-            
+
             if (response.status === 200) {
                 setUser((prevUser) => {
                     if (!prevUser) return prevUser;
@@ -109,6 +141,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     };
 
+    const sendMessage = (chatId: string, text: string) => {
+        socket.emit('send_message', { chatId, text });
+    }
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -118,7 +154,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             getChats,
             addChat,
             updateChat,
-            deleteChat
+            deleteChat,
+            sendMessage
         }}>
             {children}
         </AuthContext.Provider>

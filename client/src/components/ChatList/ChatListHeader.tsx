@@ -1,13 +1,20 @@
 import { Search } from 'lucide-react';
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext';
 
-const ChatListHeader = () => {
-  const [searchingChat, setSearchingChat] = useState<string>('');
+interface IChatListHeader {
+  setSearchQuery: (query: string) => void;
+}
+
+const ChatListHeader: React.FC<IChatListHeader> = ({ setSearchQuery }) => {
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   const { user, isAuthenticated, logout } = useAuth();
   return (
-    <div className='h-32 bg-[#FBF8F9] border-b border-gray-300 p-3 flex flex-col justify-between'>
+    <div className='h-32 bg-[#FBF8F9] border-b border-r border-gray-300 p-3 flex flex-col justify-between'>
       <div className='flex justify-between items-center'>
         <div className='flex items-center'>
           <div className='w-10 h-10 bg-white rounded-full mr-2'></div>
@@ -46,6 +53,7 @@ const ChatListHeader = () => {
           color='#d1d5db'
         />
         <input
+          onChange={handleSearchChange}
           type="text"
           className='block w-full py-1 pl-8 pr-4 rounded-full text-sm border border-gray-300 outline-gray-400'
           placeholder='Search or start new chat'

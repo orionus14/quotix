@@ -8,6 +8,7 @@ const MessageSchema = new Schema({
         enum: ['user', 'api'],
         required: true
     },
+    author: { type: String }
 }, { timestamps: true })
 
 const Message = mongoose.model('Message', MessageSchema);

@@ -1,7 +1,6 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import React, { useState } from 'react'
 import DialogBox from './DialogBox';
-import { useAuth } from '../../context/AuthContext';
 import Confirmation from './ConfirmationBox';
 
 interface IChatItem {
@@ -24,9 +23,9 @@ const ChatItem: React.FC<IChatItem> = ({ firstName, lastName, chatId }) => {
 
     return (
         <div
-            className='border-b border-gray-300 flex justify-between items-center pl-3 pr-2 py-6 hover:bg-gray-100'
+            className='border-b border-gray-300 flex justify-between items-center pl-3 pr-2 py-6 hover:bg-gray-100 cursor-pointer'
         >
-            <div className='flex items-center cursor-pointer'>
+            <div className='flex items-center'>
                 <div className='w-10 h-10 bg-gray-300 rounded-full mr-2'></div>
                 <div>
                     <div>{`${firstName} ${lastName}`}</div>
@@ -34,18 +33,18 @@ const ChatItem: React.FC<IChatItem> = ({ firstName, lastName, chatId }) => {
                 </div>
             </div>
             <div className='text-gray-600 flex flex-col items-end justify-center'>
-                <div className='flex'>
+                <div className='flex '>
                     <div
                         title='Update Chat'
                         onClick={() => setIsDialogBox(true)}
                     >
-                        <Pencil size={16} className='cursor-pointer mr-2' />
+                        <Pencil size={16} className='cursor-pointer mr-2 text-gray-600 hover:text-gray-500' />
                     </div>
                     <div
                         title='Delete Chat'
                         onClick={() => setIsConfirmationBox(true)}
                     >
-                        <Trash2 size={16} className='cursor-pointer' />
+                        <Trash2 size={16} className='cursor-pointer text-gray-600 hover:text-gray-500' />
                     </div>
                 </div>
                 <div className='text-xs mt-2'>Aug 17, 2022</div>
