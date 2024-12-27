@@ -54,7 +54,7 @@ const Chat = () => {
 
     return (
         <AuthProvider>
-            <div className="flex h-screen bg-[#FBF8F9]">
+            <div className="flex h-screen bg-[#FBF8F9] ">
                 <div className="w-1/2 lg:w-1/3 h-full flex flex-col">
                     <ChatListHeader setSearchQuery={setSearchQuery} />
                     <div className="flex-grow overflow-y-auto thin-scrollbar">
