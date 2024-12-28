@@ -26,8 +26,8 @@ const ChatListSection: React.FC<IChatListSection> = ({ searchQuery, handleSelect
     const lastMessageA = getLastMessage(a._id);
     const lastMessageB = getLastMessage(b._id);
 
-    const dateA = lastMessageA ? new Date(lastMessageA.createdAt).getTime() : new Date(a.createdAt).getTime();
-    const dateB = lastMessageB ? new Date(lastMessageB.createdAt).getTime() : new Date(b.createdAt).getTime();
+    const dateA = lastMessageA ? new Date(lastMessageA.createdAt).getTime() : new Date(a.updatedAt).getTime();
+    const dateB = lastMessageB ? new Date(lastMessageB.createdAt).getTime() : new Date(b.updatedAt).getTime();
 
     return dateB - dateA;
   });
@@ -49,13 +49,13 @@ const ChatListSection: React.FC<IChatListSection> = ({ searchQuery, handleSelect
       <div>
         {filteredChats.length > 0 ? (
           filteredChats.map((chat) => (
-            <div key={chat._id}
-              onClick={() => handleSelectChat(chat)}
-            >
+            <div key={chat._id} >
               <ChatItem
                 firstName={chat.firstName}
                 lastName={chat.lastName}
                 chatId={chat._id}
+                handleSelectChat={handleSelectChat}
+                chat={chat}
               />
             </div>
           ))

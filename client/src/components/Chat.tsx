@@ -57,9 +57,9 @@ const Chat = () => {
     return (
         <AuthProvider>
             <div className="flex h-screen bg-[#FBF8F9] ">
-                <div className={`${showMessages ? 'hidden' : 'block'} w-full sm:block sm:w-1/2 lg:w-1/3 h-full flex flex-col`}>
+                <div className={`${showMessages ? 'hidden' : 'block'} sm:block w-full sm:w-1/2 lg:w-1/3 h-full flex flex-col overflow-y-auto thin-scrollbar`}>
                     <ChatListHeader setSearchQuery={setSearchQuery} />
-                    <div className="flex-grow overflow-y-auto thin-scrollbar">
+                    <div className="flex-grow w-full">
                         <ChatListSection
                             searchQuery={searchQuery}
                             handleSelectChat={handleSelectChat}
