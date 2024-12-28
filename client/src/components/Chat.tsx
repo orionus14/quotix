@@ -15,6 +15,7 @@ const Chat = () => {
     const [chat, setChat] = useState<null | ChatModel>(null);
     const [chatMessages, setChatMessages] = useState<Message[]>([]);
     const [notifications, setNotifications] = useState<string[]>([]);
+    const [showMessages, setShowMessages] = useState(false);
 
     useEffect(() => {
         if (chat) {
@@ -40,6 +41,7 @@ const Chat = () => {
         const messages = await fetchMessages(selectedChat._id);
         setChat({ ...selectedChat, messages });
         setChatMessages(messages);
+        setShowMessages(true);
     };
 
     useEffect(() => {
@@ -55,7 +57,7 @@ const Chat = () => {
     return (
         <AuthProvider>
             <div className="flex h-screen bg-[#FBF8F9] ">
-                <div className="w-1/2 lg:w-1/3 h-full flex flex-col">
+                <div className={`${showMessages ? 'hidden' : 'block'} w-full sm:block sm:w-1/2 lg:w-1/3 h-full flex flex-col`}>
                     <ChatListHeader setSearchQuery={setSearchQuery} />
                     <div className="flex-grow overflow-y-auto thin-scrollbar">
                         <ChatListSection
@@ -64,9 +66,11 @@ const Chat = () => {
                         />
                     </div>
                 </div>
-                {chat && (
-                    <div className="w-1/2 lg:w-2/3 border-l border-gray-300 flex flex-col">
-                        <MessageHeader chatId={chat._id} />
+                {chat && showMessages && (
+                    <div
+                        className='w-full sm:w-1/2 lg:w-2/3 border-l border-gray-300 flex flex-col'
+                    >
+                        <MessageHeader chatId={chat._id} setShowMessages={setShowMessages} />
                         <Messages chatId={chat._id} chatMessages={chatMessages} setChatMessages={setChatMessages} />
                         <MessageInput chatId={chat._id} />
                     </div>

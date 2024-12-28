@@ -8,6 +8,7 @@ import Chat from '../models/Chat';
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 
+// 3 predefined chats
 const initialChats = [
     { firstName: 'Luke', lastName: 'Skywalker' },
     { firstName: 'Anakin', lastName: 'Skywalker' },
